@@ -402,7 +402,7 @@ export function LeaderboardTable() {
         </div>
 
         <div className="mt-4 text-xs text-muted-foreground">
-          <p>💡 Click on any row to view detailed metrics. Data source: VIOLIN Benchmark (ICML 2026)</p>
+          <p>💡 Click on any row to view detailed metrics. Data source: VIOLIN Benchmark</p>
         </div>
       </div>
     </section>

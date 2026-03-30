@@ -57,7 +57,7 @@ export function Footer() {
         </div>
 
         <div className="mt-8 border-t border-border pt-6 text-center text-xs text-muted-foreground">
-          ICML 2026 · Last Updated: March 2026
+          Last Updated: March 2026
         </div>
       </div>
     </footer>

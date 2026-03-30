@@ -7,9 +7,6 @@ export function HeroSection() {
     <section className="border-b border-border bg-background py-12 sm:py-16">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="space-y-4">
-          <Badge variant="secondary" className="px-3 py-1 text-xs">
-            ICML 2026
-          </Badge>
           
           <h1 className="text-balance text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
             VIOLIN Leaderboard

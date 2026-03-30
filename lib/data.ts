@@ -670,8 +670,8 @@ export const fineTuningResults: FineTuningResult[] = [
     model: 'Janus-Pro-1.5',
     organization: 'DeepSeek',
     before: { preMean: 0.396, purMean: 0.068 },
-    after: { preMean: 0.119, purMean: 0.004 },
-    improvement: { precision: -69.9, purity: -94.1 }
+    after: { preMean: 0.210, purMean: 0.006 },
+    improvement: { precision: -47.0, purity: -91.2 }
   },
   {
     model: 'FLUX.1',
@@ -698,8 +698,8 @@ export const fineTuningResults: FineTuningResult[] = [
     model: 'Qwen-Image',
     organization: 'Alibaba',
     before: { preMean: 0.171, purMean: 0.027 },
-    after: { preMean: 0.210, purMean: 0.006 },
-    improvement: { precision: 22.8, purity: -77.8 }
+    after: { preMean: 0.119, purMean: 0.004 },
+    improvement: { precision: -30.4, purity: -85.2 }
   }
 ]
 

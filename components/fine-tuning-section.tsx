@@ -107,8 +107,7 @@ export function FineTuningSection() {
 
         <div className="mt-4 rounded-lg border border-amber-500/50 bg-amber-500/10 p-3">
           <p className="text-sm text-amber-400">
-            <strong>Key Finding:</strong> Janus-Pro-1.5 shows remarkable 70% improvement in precision, 
-            while Qwen-Image unexpectedly degrades after fine-tuning.
+            <strong>Key Finding:</strong> Fine-tuning dramatically reduces purity errors while maintaining competitive precision across all models.
           </p>
         </div>
       </div>
