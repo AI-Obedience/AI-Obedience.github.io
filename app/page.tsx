@@ -3,6 +3,7 @@ import { HeroSection } from '@/components/hero-section'
 import { LeaderboardTable } from '@/components/leaderboard-table'
 import { FineTuningSection } from '@/components/fine-tuning-section'
 import { GeneralizationSection } from '@/components/generalization-section'
+import { SupplementarySection } from '@/components/supplementary-section'
 import { Footer } from '@/components/footer'
 
 export default function HomePage() {
@@ -13,6 +14,7 @@ export default function HomePage() {
       <LeaderboardTable />
       <FineTuningSection />
       <GeneralizationSection />
+      <SupplementarySection />
       <Footer />
     </main>
   )

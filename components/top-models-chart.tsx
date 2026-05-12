@@ -2,7 +2,10 @@
 
 import { Bar, BarChart, XAxis, YAxis, Cell } from 'recharts'
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart'
-import { var1Results, var2Results, var3Results } from '@/lib/data'
+import {
+  pureColorVar1Results, imageMaskResults, geometricShapeResults,
+  pureColorScore, imageMaskScore, geometricScore,
+} from '@/lib/data'
 
 const chartConfig = {
   score: { label: 'Score', color: 'var(--chart-1)' },
@@ -10,53 +13,48 @@ const chartConfig = {
 
 const COLORS = ['var(--chart-1)', 'var(--chart-2)', 'var(--chart-3)', 'var(--chart-4)', 'var(--chart-5)']
 
-// Prepare chart data for different tasks
-const colorPrecisionData = var1Results.slice(0, 5).map((m) => ({
-  name: m.model.length > 14 ? m.model.slice(0, 12) + '..' : m.model,
-  score: (1 - m.colorPrecision.mean) * 100,
-}))
+const trim = (s: string) => s.length > 14 ? s.slice(0, 12) + '..' : s
 
-const colorPurityData = [...var1Results]
-  .sort((a, b) => a.colorPurity.mean - b.colorPurity.mean)
+const colorPrecisionData = [...pureColorVar1Results]
+  .sort((a, b) => a.colorMean - b.colorMean)
   .slice(0, 5)
-  .map((m) => ({
-    name: m.model.length > 14 ? m.model.slice(0, 12) + '..' : m.model,
-    score: (1 - m.colorPurity.mean) * 100,
-  }))
+  .map(m => ({ name: trim(m.model), score: pureColorScore(m) }))
 
-const var2Data = var2Results.slice(0, 5).map((m) => ({
-  name: m.model.length > 14 ? m.model.slice(0, 12) + '..' : m.model,
-  score: (1 - m.colorPrecision.mean) * 100,
-}))
-
-const var3Data = var3Results.slice(0, 5).map((m) => ({
-  name: m.model.length > 14 ? m.model.slice(0, 12) + '..' : m.model,
-  score: (1 - m.colorPrecision.mean) * 100,
-}))
-
-const openSourceData = var1Results
-  .filter((m) => m.type === 'Open')
+const maskData = [...imageMaskResults]
+  .sort((a, b) => a.shapeMean - b.shapeMean)
   .slice(0, 5)
-  .map((m) => ({
-    name: m.model.length > 14 ? m.model.slice(0, 12) + '..' : m.model,
-    score: (1 - m.colorPrecision.mean) * 100,
-  }))
+  .map(m => ({ name: trim(m.model), score: imageMaskScore(m) }))
 
-const closedSourceData = var1Results
-  .filter((m) => m.type === 'Closed')
+const geoData = [...geometricShapeResults]
+  .sort((a, b) => a.maskMean - b.maskMean)
   .slice(0, 5)
-  .map((m) => ({
-    name: m.model.length > 14 ? m.model.slice(0, 12) + '..' : m.model,
-    score: (1 - m.colorPrecision.mean) * 100,
-  }))
+  .map(m => ({ name: trim(m.model), score: geometricScore(m) }))
+
+const openSourceColorData = pureColorVar1Results
+  .filter(m => m.type === 'Open')
+  .sort((a, b) => a.colorMean - b.colorMean)
+  .slice(0, 5)
+  .map(m => ({ name: trim(m.model), score: pureColorScore(m) }))
+
+const closedSourceColorData = pureColorVar1Results
+  .filter(m => m.type === 'Closed')
+  .sort((a, b) => a.colorMean - b.colorMean)
+  .slice(0, 5)
+  .map(m => ({ name: trim(m.model), score: pureColorScore(m) }))
+
+const closedSourceGeoData = geometricShapeResults
+  .filter(m => m.type === 'Closed')
+  .sort((a, b) => a.maskMean - b.maskMean)
+  .slice(0, 5)
+  .map(m => ({ name: trim(m.model), score: geometricScore(m) }))
 
 const chartItems = [
-  { title: 'Best in Color Precision (Var-1)', data: colorPrecisionData },
-  { title: 'Best in Color Purity (Var-1)', data: colorPurityData },
-  { title: 'Best in Dual Block (Var-2)', data: var2Data },
-  { title: 'Best in Quad Block (Var-3)', data: var3Data },
-  { title: 'Best Open Source Models', data: openSourceData },
-  { title: 'Best Closed Source Models', data: closedSourceData },
+  { title: 'Best Pure Color Precision',           data: colorPrecisionData },
+  { title: 'Best Image Mask Obedience',            data: maskData },
+  { title: 'Best Geometric Shape Obedience',       data: geoData },
+  { title: 'Best Open-Source (Pure Color)',        data: openSourceColorData },
+  { title: 'Best Closed-Source (Pure Color)',      data: closedSourceColorData },
+  { title: 'Best Closed-Source (Geometric Shape)', data: closedSourceGeoData },
 ]
 
 export function TopModelsChart() {
@@ -64,52 +62,26 @@ export function TopModelsChart() {
     <section className="border-b border-border bg-background py-12">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <h2 className="mb-8 text-xl font-semibold text-foreground">Top Models per Task</h2>
-
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {chartItems.map((item) => (
+          {chartItems.map(item => (
             <div key={item.title} className="rounded-xl border border-border bg-card p-5">
               <h3 className="mb-4 text-sm font-medium text-muted-foreground">{item.title}</h3>
-              <ChartContainer config={chartConfig} className="h-[160px] w-full">
-                <BarChart
-                  data={item.data}
-                  layout="vertical"
-                  margin={{ top: 0, right: 10, bottom: 0, left: 0 }}
-                >
+              <ChartContainer config={chartConfig} className="h-40 w-full">
+                <BarChart data={item.data} layout="vertical" margin={{ top: 0, right: 10, bottom: 0, left: 0 }}>
                   <XAxis type="number" domain={[0, 100]} hide />
-                  <YAxis
-                    type="category"
-                    dataKey="name"
-                    width={90}
-                    tick={{ fill: 'var(--foreground)', fontSize: 11 }}
-                    axisLine={false}
-                    tickLine={false}
-                  />
+                  <YAxis type="category" dataKey="name" width={90}
+                    tick={{ fill: 'var(--foreground)', fontSize: 11 }} axisLine={false} tickLine={false} />
                   <ChartTooltip
-                    content={<ChartTooltipContent formatter={(v) => `${Number(v).toFixed(1)}%`} />}
+                    content={<ChartTooltipContent formatter={v => `${Number(v).toFixed(1)}`} />}
                     cursor={{ fill: 'var(--muted)', opacity: 0.2 }}
                   />
                   <Bar dataKey="score" radius={[0, 4, 4, 0]} barSize={16}>
-                    {item.data.map((_, index) => (
-                      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                    {item.data.map((_, i) => (
+                      <Cell key={i} fill={COLORS[i % COLORS.length]} />
                     ))}
                   </Bar>
                 </BarChart>
               </ChartContainer>
-              <div className="mt-3 flex items-center justify-between text-xs text-muted-foreground">
-                <span>Higher is better</span>
-                <div className="flex items-center gap-2">
-                  {item.data.slice(0, 3).map((_, i) => (
-                    <span key={i} className="flex items-center gap-1">
-                      <span
-                        className="inline-block h-2 w-2 rounded-full"
-                        style={{ backgroundColor: COLORS[i] }}
-                      />
-                      {i + 1}
-                      {i === 0 ? 'st' : i === 1 ? 'nd' : 'rd'}
-                    </span>
-                  ))}
-                </div>
-              </div>
             </div>
           ))}
         </div>
