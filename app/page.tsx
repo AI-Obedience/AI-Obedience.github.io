@@ -12,8 +12,6 @@ export default function HomePage() {
       <Header />
       <HeroSection />
       <LeaderboardTable />
-      <FineTuningSection />
-      <GeneralizationSection />
       <SupplementarySection />
       <Footer />
     </main>
